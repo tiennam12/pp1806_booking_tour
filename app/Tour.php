@@ -17,5 +17,6 @@ class Tour extends Model
         'view', 
         'discount',
         'start',
+        'days',
     ];
 }

@@ -1,7 +1,9 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use Illuminate\Support\Arr;
+use App\Tour;
+use DB;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
@@ -13,7 +15,6 @@ class HomeController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth');
     }
 
     /**
@@ -22,7 +23,9 @@ class HomeController extends Controller
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function index()
-    {
-        return view('home');
+    {   
+        $tours=Tour::all()->random(3);
+
+        return view('home', ['tours' => $tours]);
     }
 }

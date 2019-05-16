@@ -5,7 +5,12 @@ use App\Tour;
 use Illuminate\Http\Request;
 
 class TourController extends Controller
-{
+{   
+    public function index(Request $request) {
+        $tours = Tour::paginate(config('tours.paginate'));;
+
+        return view('tours.index', ['tours' => $tours]);
+    }
     public function create() {        
         return view('tours.create');
     }
@@ -26,7 +31,8 @@ class TourController extends Controller
             'quantity',
             'avg_rating',
             'description',
-            'created_by'
+            'created_by',
+            'days'
         ]);
         $uploaded = $this->upload($data['image']);
         
@@ -78,9 +84,9 @@ class TourController extends Controller
     }
 
     public function show($id) {
-        $tour = Tour::findOrFail($id);
+        $tours = Tour::findOrFail($id);
 
-        return view('tours.show', ['tour' => $tour]);
+        return view('tours.show', ['tours' => $tours]);
     }
 
     public function edit($id) {
@@ -110,7 +116,8 @@ class TourController extends Controller
             'quantity',
             'avg_rating',
             'description',
-            'created_by'
+            'created_by',
+            'days'
         ]);
         
         try {
@@ -121,5 +128,22 @@ class TourController extends Controller
         }
         
         return redirect('products/' . $id)->with('status', 'Update success!');
+    }
+
+    public function destroy($id) {
+        try {
+            $tour = Tour::find($id);
+            $tour->delete();
+            $result = [
+                'status' => true,
+                'msg' => 'Delete success',
+            ];
+        } catch (Exception $e) {
+            $result = [
+                'status' => false,
+                'msg' => 'Delete fail',
+            ];
+        }
+        return response()->json($result);
     }
 }
