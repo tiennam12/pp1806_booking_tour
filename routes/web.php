@@ -28,3 +28,6 @@ Route::delete('/users/{user}', 'UsersController@destroy')->name('users.destroy')
 Route::get('/users/{user}/edit', 'UsersController@edit')->name('users.edit');
 Route::post('/users/{user}', 'UsersController@update')->name('users.update');
 
+Route::get('/orders/create', 'OrdersController@create')->name('orders.create');
+Route::post('/orders', 'OrdersController@store')->name('orders.store');
+Route::get('/orders', 'OrdersController@index')->name('orders.index');
