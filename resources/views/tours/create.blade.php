@@ -31,6 +31,16 @@
                         </div>
 
                         <div class="form-group row">
+                            <label for="days" class="col-md-4 col-form-label text-md-right">{{ __('Days') }}</label>
+                            <div class="col-md-6">
+                                <input id="days" type="text" class="form-control{{ $errors->has('days') ? ' is-invalid' : '' }}" name="days" required autofocus>
+                                @error('days')
+                                    <span>{{ $message }}</span>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
                             <label for="price" class="col-md-4 col-form-label text-md-right">{{ __('Price') }}</label>
 
                             <div class="col-md-6">
