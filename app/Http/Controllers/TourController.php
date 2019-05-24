@@ -3,10 +3,18 @@ namespace App\Http\Controllers;
 
 use App\Tour;
 use Illuminate\Http\Request;
+use App\Http\Requests\CreateTourRequest;
+use App\Http\Requests\UpdateTourRequest;
 
 class TourController extends Controller
-{
-    public function create() {        
+{   
+    public function index(Request $request) {
+        $tours = Tour::paginate(config('tours.paginate'));
+
+        return view('tours.index', ['tours' => $tours]);
+    }
+
+    public function create() {
         return view('tours.create');
     }
     /**
@@ -15,7 +23,7 @@ class TourController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request) {
+    public function store(CreateTourRequest $request) {
         $data = $request->only([
             'category_id',
             'discount',
@@ -26,7 +34,8 @@ class TourController extends Controller
             'quantity',
             'avg_rating',
             'description',
-            'created_by'
+            'created_by',
+            'days',
         ]);
         $uploaded = $this->upload($data['image']);
         
@@ -83,7 +92,7 @@ class TourController extends Controller
         return view('tours.show', ['tour' => $tour]);
     }
 
-    public function edit($id) {
+    public function edit(EditTourRequest $id) {
         $tour = Tour::find($id);
         
         if (!$tour) {
@@ -99,7 +108,7 @@ class TourController extends Controller
      * @param  \App\tour  $tour
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id) {
+    public function update(UpdateTourRequest $request, $id) {
         $data = $request->only([
             'category_id',
             'discount',
@@ -110,16 +119,35 @@ class TourController extends Controller
             'quantity',
             'avg_rating',
             'description',
-            'created_by'
+            'created_by',
+            'days',
         ]);
         
         try {
             $tour = Tour::find($id);
             $tour->update($data);
         } catch (Exception $e) {
-            return back()->with('status', 'Update fail');
+            return back()->with('status', trans('message.update_fail'));
         }
         
-        return redirect('products/' . $id)->with('status', 'Update success!');
+        return redirect('products/' . $id)->with('status', trans('message.update_success'));
+    }
+
+    public function destroy($id) {
+        try {
+            $tour = Tour::find($id);
+            $tour->delete();
+            $result = [
+                'status' => true,
+                'msg' => trans('message.delete_success'),
+            ];
+        } catch (Exception $e) {
+            $result = [
+                'status' => false,
+                'msg' => trans('message.delete_fail'),
+            ];
+        }
+        
+        return response()->json($result);
     }
 }

@@ -10,18 +10,18 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
-
-Route::get('/', function () {
-    return view('welcome');
-});
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
-Route::get('/tours/create', 'TourController@create')->name('tours.create');
-Route::post('/tours', 'TourController@store')->name('tours.store');
-Route::get('/tours/{tour}', 'TourController@show')->name('tours.show');
+
 Route::get('/tours/{tour}/edit', 'TourController@edit')->name('tours.edit');
+Route::get('/tours/create', 'TourController@create')->name('tours.create');
+Route::get('/tours/{tour}', 'TourController@show')->name('tours.show');
 Route::post('/tours/{tour}', 'TourController@update')->name('tours.update');
+Route::delete('/tours/{user}', 'TourController@destroy')->name('tours.destroy');
+Route::get('/tours', 'TourController@index')->name('tours.index');
+Route::post('/tours', 'TourController@store')->name('tours.store');
+
 Route::get('/users', 'UsersController@index')->name('users.index');
 Route::get('/users/{user}', 'UsersController@show')->name('users.show');
 Route::delete('/users/{user}', 'UsersController@destroy')->name('users.destroy');
