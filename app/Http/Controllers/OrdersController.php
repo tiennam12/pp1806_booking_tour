@@ -1,12 +1,11 @@
 <?php
-
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\User;
-use App\Http\Requests\UpdateUser;
+use App\Order;
+use App\Http\Request\CreateOrderRequest;
 
-class UsersController extends Controller
+class OrdersController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -14,9 +13,9 @@ class UsersController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index() {
-        $users = User::all();
+        $orders = Order::paginate(config('orders.paginate'));
 
-        return view('users.index', ['users' => $users]);
+        return view('orders.index', ['orders' => $orders]);
     }
 
     /**
@@ -25,7 +24,7 @@ class UsersController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function create() {
-        //
+        return view('orders.create');
     }
 
     /**
@@ -34,8 +33,17 @@ class UsersController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request) {
+    public function store(CreateOrderRequest $request) {
+        $data = $request->only('total_price', 'description', 'status');
+        $data['user_id'] = auth()->id();
         
+        try {
+            $order = Order::create($data);
+        } catch (\Exception $e) {
+            return back()->with('status', 'Failed to create order');
+        }
+        
+        return redirect(route('orders.show', $order->id))->with('status', 'Create successfuly !');
     }
 
     /**
@@ -45,9 +53,7 @@ class UsersController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function show($id) {
-        $user = User::find($id);
-
-        return view('users.show', ['user' => $user]);
+        //
     }
 
     /**
@@ -57,13 +63,7 @@ class UsersController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function edit($id) {
-        $user = User::find($id);
-
-        if (!$user) {
-            return back();
-        }
-
-        return view('users.edit', ['user' => $user]);
+        //
     }
 
     /**
@@ -74,16 +74,7 @@ class UsersController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id) {
-        $data = $request->only(['name', 'email']);
-
-        try {
-            $user = User::find($id);
-            $user->update($data);
-        } catch (Exception $e) {
-            return back()->with('status', 'Update fail');
-        }
-
-        return redirect('users')->with('status', 'Profile updated!');
+        //
     }
 
     /**
@@ -93,21 +84,6 @@ class UsersController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function destroy($id) {
-        
-        try {
-            $user = User::find($id);
-            $user->delete();
-            $result = [
-                'status' => true,
-                'msg' => 'Delete success',
-            ];
-        } catch (Exception $e) {
-            $result = [
-                'status' => false,
-                'msg' => 'Delete fail',
-            ];
-        }
-
-        return response()->json($result);
+        //
     }
 }

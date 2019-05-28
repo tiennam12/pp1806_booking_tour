@@ -13,4 +13,5 @@ const mix = require('laravel-mix');
 
 mix.js('resources/js/app.js', 'public/js')
    .js('resources/js/index/index_user.js', 'public/js/index_user.js')
+   .js('resources/js/index/index_order.js', 'public/js/index_order.js')
    .sass('resources/sass/app.scss', 'public/css');
