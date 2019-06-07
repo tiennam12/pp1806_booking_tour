@@ -14,8 +14,9 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/tours', 'TourController@index')->name('tours.index');
+Route::view('/fail', 'fail');
 
-Route::group(['prefix' => '/admin'], function() {
+Route::group(['prefix' => '/admin', 'middleware' => ['auth', 'admin']], function() {
     Route::get('/home', 'AdminController@index')->name('admin.home');
     Route::get('/tours/{tour}/edit', 'TourController@edit')->name('tours.edit');
     Route::get('/tours/create', 'TourController@create')->name('tours.create');

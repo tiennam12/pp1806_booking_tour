@@ -74,7 +74,7 @@ class UsersController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id) {
-        $data = $request->only(['name', 'email']);
+        $data = $request->only(['name', 'email', 'role_id']);
 
         try {
             $user = User::find($id);
@@ -83,7 +83,7 @@ class UsersController extends Controller
             return back()->with('status', __('message.create_fail'));
         }
 
-        return redirect('admin.users')->with('status', __('message.create_success'));
+        return redirect('admin/users')->with('status', __('message.create_success'));
     }
 
     /**

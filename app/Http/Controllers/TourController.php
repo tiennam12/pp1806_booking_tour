@@ -11,7 +11,7 @@ class TourController extends Controller
     public function index(Request $request) {
         $tours = Tour::paginate(config('tours.paginate'));
 
-        return view('tours.index', ['tours' => $tours]);
+        return view('list_tour', ['tours' => $tours]);
     }
 
     public function create() {
